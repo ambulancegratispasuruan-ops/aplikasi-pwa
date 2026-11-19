@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10243a">
+  <meta name="description" content="Aplikasi digital modern">
+  <title>MyApp PWA</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div>
+        <h2>MyApp PWA</h2>
+        <small>Digital Application</small>
+      </div>
+    </div>
+    <span class="online">● Online</span>
+  </header>
+
+  <main class="container">
+    <section class="welcome">
+      <p>SELAMAT DATANG</p>
+      <h1>Dashboard Aplikasi</h1>
+      <span>Satu aplikasi untuk semua perangkat.</span>
+    </section>
+
+    <section class="stats">
+      <div class="card">
+        <small>Total Data</small>
+        <h2 id="totalData">0</h2>
+      </div>
+      <div class="card">
+        <small>Status</small>
+        <h2 class="active">Aktif</h2>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Tambah Data</h3>
+      <form id="dataForm">
+        <label>Nama Data</label>
+        <input id="namaData" required placeholder="Masukkan nama">
+
+        <label>Keterangan</label>
+        <textarea id="keterangan" required placeholder="Masukkan keterangan"></textarea>
+
+        <button type="submit">Simpan Data</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h3>Daftar Data</h3>
+      <div id="dataList">Belum ada data.</div>
+    </section>
+  </main>
+
+  <footer>MyApp PWA © 2026</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
