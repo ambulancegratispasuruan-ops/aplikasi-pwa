@@ -1,67 +1,185 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#10243a">
-  <meta name="description" content="Aplikasi digital modern">
-  <title>MyApp PWA</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#12324a">
+  <meta name="description" content="Aplikasi pelayanan ambulans Relawan Tri Brata DSD SDS Jatim 97/98">
+  <title>DSD SDS 97/98 | Pelayanan Ambulans</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-
-  <header class="header">
-    <div class="brand">
-      <div class="logo">M</div>
-      <div>
-        <h2>MyApp PWA</h2>
-        <small>Digital Application</small>
-      </div>
+  <header class="topbar">
+    <div class="brand-mark">97<span>/</span>98</div>
+    <div class="brand-copy">
+      <strong>RELAWAN TRI BRATA</strong>
+      <small>DSD SDS JATIM 97 / 98</small>
     </div>
-    <span class="online">● Online</span>
+    <span id="connection" class="connection"><i></i> Memeriksa...</span>
   </header>
 
-  <main class="container">
-    <section class="welcome">
-      <p>SELAMAT DATANG</p>
-      <h1>Dashboard Aplikasi</h1>
-      <span>Satu aplikasi untuk semua perangkat.</span>
-    </section>
-
-    <section class="stats">
-      <div class="card">
-        <small>Total Data</small>
-        <h2 id="totalData">0</h2>
+  <main class="app-shell">
+    <section id="setupScreen" class="screen">
+      <div class="hero">
+        <span class="eyebrow">SISTEM PELAYANAN AMBULANS</span>
+        <h1>Selamat datang,<br>Relawan Tri Brata.</h1>
+        <p>Pilih wilayah operasional dan masukkan nama operator untuk mulai bertugas.</p>
       </div>
-      <div class="card">
-        <small>Status</small>
-        <h2 class="active">Aktif</h2>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h3>Tambah Data</h3>
-      <form id="dataForm">
-        <label>Nama Data</label>
-        <input id="namaData" required placeholder="Masukkan nama">
-
-        <label>Keterangan</label>
-        <textarea id="keterangan" required placeholder="Masukkan keterangan"></textarea>
-
-        <button type="submit">Simpan Data</button>
+      <form id="setupForm" class="panel">
+        <label for="region">Wilayah ambulans</label>
+        <select id="region" required>
+          <option value="">Pilih wilayah</option>
+          <option value="Pasuruan">Pasuruan</option>
+          <option value="Probolinggo">Probolinggo</option>
+          <option value="Malang">Malang</option>
+          <option value="Surabaya">Surabaya</option>
+          <option value="Wilayah lainnya">Wilayah lainnya</option>
+        </select>
+        <div id="otherRegionWrap" class="hidden">
+          <label for="otherRegion">Nama wilayah</label>
+          <input id="otherRegion" maxlength="60" placeholder="Contoh: Sidoarjo">
+        </div>
+        <label for="operator">Nama operator</label>
+        <input id="operator" maxlength="80" autocomplete="name" required placeholder="Nama petugas yang mengisi">
+        <button class="primary full" type="submit">Mulai bertugas <span>→</span></button>
+        <p class="hint">Identitas ini disimpan pada perangkat ini. Untuk uji coba awal gunakan perangkat operator yang ditentukan.</p>
       </form>
     </section>
 
-    <section class="panel">
-      <h3>Daftar Data</h3>
-      <div id="dataList">Belum ada data.</div>
+    <section id="homeScreen" class="screen hidden">
+      <div class="welcome-row">
+        <div>
+          <span class="eyebrow">DASHBOARD OPERATOR</span>
+          <h1 id="welcomeTitle">Wilayah Pasuruan</h1>
+          <p id="operatorLabel" class="muted"></p>
+        </div>
+        <button id="changeIdentity" class="icon-button" type="button" aria-label="Ganti identitas">⚙</button>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span>Total pelayanan</span><strong id="totalReports">0</strong></article>
+        <article class="stat-card"><span>Belum tersinkron</span><strong id="pendingReports">0</strong></article>
+      </div>
+
+      <div class="action-grid">
+        <button class="action-card action-main" id="newReport" type="button">
+          <span class="action-icon">＋</span><strong>Buat laporan pelayanan</strong><small>Catat permintaan bantuan ambulans</small>
+        </button>
+        <button class="action-card" id="openHistory" type="button">
+          <span class="action-icon">▤</span><strong>Riwayat pelayanan</strong><small>Buka laporan yang tersimpan</small>
+        </button>
+        <button class="action-card" id="openFinance" type="button">
+          <span class="action-icon">↗</span><strong>Keuangan pelayanan</strong><small>Catat pemasukan dan pengeluaran</small>
+        </button>
+      </div>
+
+      <div class="section-heading"><h2>Aktivitas terbaru</h2><button id="seeAll" class="text-button" type="button">Lihat semua</button></div>
+      <div id="recentReports" class="stack"></div>
+      <div class="offline-note"><strong>Mode penyimpanan lokal aktif</strong><span>Data tersimpan di perangkat ini. Sinkronisasi pusat belum dihubungkan pada versi uji coba ini.</span></div>
+    </section>
+
+    <section id="reportScreen" class="screen hidden">
+      <div class="page-heading">
+        <button class="back-button" data-back="homeScreen" type="button">←</button>
+        <div><span class="eyebrow">FORMULIR PELAYANAN</span><h1>Permintaan bantuan ambulans</h1></div>
+      </div>
+      <form id="reportForm" class="panel form-panel">
+        <div class="form-banner">
+          <strong>RELAWAN TRI BRATA</strong>
+          <span>DSD SDS JATIM 97 / 98</span>
+          <small id="formRegion">AMBULANCE PASURUAN</small>
+        </div>
+        <div class="form-grid">
+          <div><label for="reportDay">Hari</label><input id="reportDay" readonly></div>
+          <div><label for="reportDate">Tanggal</label><input id="reportDate" type="date" required></div>
+          <div class="wide"><label for="familyPhone">No. Tlp Keluarga</label><input id="familyPhone" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx" required></div>
+          <div class="wide"><label for="patientName">Nama pasien</label><input id="patientName" maxlength="100" required placeholder="Nama pasien"></div>
+          <div><label for="patientAge">Umur</label><input id="patientAge" maxlength="30" placeholder="Contoh: 45 tahun"></div>
+          <div><label for="patientStatus">Status</label><input id="patientStatus" maxlength="60" placeholder="Contoh: Umum"></div>
+          <div class="wide"><label for="pickup">Jemput</label><textarea id="pickup" rows="2" required placeholder="Alamat penjemputan"></textarea></div>
+          <div class="wide"><label for="destination">Tujuan</label><textarea id="destination" rows="2" required placeholder="Rumah sakit / alamat tujuan"></textarea></div>
+          <div><label for="serviceTime">Jam</label><input id="serviceTime" type="time" required></div>
+          <div class="wide"><label for="notes">Keterangan</label><textarea id="notes" rows="3" placeholder="Keterangan tambahan (opsional)"></textarea></div>
+        </div>
+        <div class="draft-status" id="draftStatus">Draf akan tersimpan otomatis pada perangkat ini.</div>
+        <button class="primary full" type="submit">Simpan laporan pelayanan</button>
+        <button class="secondary full" id="cancelReport" type="button">Batal</button>
+      </form>
+    </section>
+
+    <section id="detailScreen" class="screen hidden">
+      <div class="page-heading">
+        <button class="back-button" data-back="homeScreen" type="button">←</button>
+        <div><span class="eyebrow">LAPORAN TERSIMPAN</span><h1>Detail pelayanan</h1></div>
+      </div>
+      <div id="reportDetail" class="panel"></div>
+      <div class="button-stack">
+        <button id="shareReport" class="primary full" type="button">Bagikan laporan ke WhatsApp</button>
+        <button id="addTransaction" class="secondary full" type="button">＋ Catat keuangan pelayanan ini</button>
+      </div>
+    </section>
+
+    <section id="historyScreen" class="screen hidden">
+      <div class="page-heading">
+        <button class="back-button" data-back="homeScreen" type="button">←</button>
+        <div><span class="eyebrow">ARSIP LOKAL</span><h1>Riwayat pelayanan</h1></div>
+      </div>
+      <div class="filter-row">
+        <input id="historySearch" type="search" placeholder="Cari nama pasien / nomor laporan">
+      </div>
+      <div id="historyList" class="stack"></div>
+    </section>
+
+    <section id="financeScreen" class="screen hidden">
+      <div class="page-heading">
+        <button class="back-button" data-back="homeScreen" type="button">←</button>
+        <div><span class="eyebrow">TRANSPARANSI PELAYANAN</span><h1>Keuangan pelayanan</h1></div>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>Total pemasukan</span><strong id="incomeTotal">Rp0</strong></article>
+        <article class="stat-card"><span>Total pengeluaran</span><strong id="expenseTotal">Rp0</strong></article>
+      </div>
+      <form id="financeForm" class="panel">
+        <h2>Catat transaksi</h2>
+        <label for="financeReport">Hubungkan ke laporan pelayanan</label>
+        <select id="financeReport" required><option value="">Pilih laporan</option></select>
+        <label for="financeType">Jenis transaksi</label>
+        <select id="financeType" required>
+          <option value="Pemasukan">Pemasukan</option>
+          <option value="Pengeluaran">Pengeluaran</option>
+        </select>
+        <label for="financeAmount">Nominal (Rp)</label>
+        <input id="financeAmount" type="number" min="1" step="1" required inputmode="numeric" placeholder="Contoh: 150000">
+        <label for="financeCategory">Kategori</label>
+        <select id="financeCategory" required>
+          <option value="Bantuan keluarga pasien">Bantuan keluarga pasien</option>
+          <option value="Donasi">Donasi</option>
+          <option value="BBM">BBM</option>
+          <option value="Tol / parkir">Tol / parkir</option>
+          <option value="Perawatan kendaraan">Perawatan kendaraan</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+        <label for="financeNote">Keterangan</label>
+        <textarea id="financeNote" rows="2" placeholder="Keterangan transaksi"></textarea>
+        <button class="primary full" type="submit">Simpan transaksi</button>
+      </form>
+      <div class="section-heading"><h2>Riwayat transaksi</h2></div>
+      <div id="transactionList" class="stack"></div>
+    </section>
+
+    <section id="transactionDetailScreen" class="screen hidden">
+      <div class="page-heading">
+        <button class="back-button" data-back="financeScreen" type="button">←</button>
+        <div><span class="eyebrow">RINGKASAN KEUANGAN</span><h1>Transaksi pelayanan</h1></div>
+      </div>
+      <div id="transactionShareText" class="panel"></div>
+      <button id="shareFinance" class="primary full" type="button">Bagikan ke WhatsApp</button>
     </section>
   </main>
 
-  <footer>MyApp PWA © 2026</footer>
-
-  <script src="app.js"></script>
+  <footer class="app-footer">RELAWAN TRI BRATA · DSD SDS JATIM 97 / 98</footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
 </body>
 </html>

@@ -1,12 +1,11 @@
-
 {
-  "name": "MyApp PWA",
-  "short_name": "MyApp",
-  "description": "Aplikasi digital modern",
+  "name": "DSD SDS Jatim 97/98 - Pelayanan Ambulans",
+  "short_name": "DSD SDS 97/98",
+  "description": "Aplikasi pelayanan ambulans Relawan Tri Brata",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#f3f5f8",
-  "theme_color": "#10243a"
+  "background_color": "#f3f6f8",
+  "theme_color": "#12324a",
+  "lang": "id"
 }
